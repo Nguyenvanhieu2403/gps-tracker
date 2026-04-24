@@ -1,0 +1,76 @@
+<div class="location-v2-wrapper">
+
+  <!-- Status Panel -->
+  <div class="status-panel">
+    <div class="status-panel__header">
+      <div class="status-panel__icon">🚗</div>
+      <div class="status-panel__title">GPS Tracking</div>
+    </div>
+    <div class="status-panel__count">{{ objectKeys(users).length }}</div>
+    <div class="status-panel__count-label">xe đang hoạt động</div>
+  </div>
+
+  <!-- Vehicle List -->
+  <div class="vehicle-list">
+    @for (id of objectKeys(users); track id) {
+      <div class="vehicle-card" (click)="focusVehicle(id)">
+        <div class="vehicle-card__header">
+          <span class="vehicle-card__id">
+            <span class="pulse-dot"
+                  [class.pulse-dot--blue]="id === 'real-user'"
+                  [class.pulse-dot--red]="id === 'fake-user'"
+                  [class.pulse-dot--green]="id.startsWith('car-')"></span>
+            {{ id }}
+          </span>
+          <span class="vehicle-card__badge"
+                [class.vehicle-card__badge--blue]="id === 'real-user'"
+                [class.vehicle-card__badge--red]="id === 'fake-user'"
+                [class.vehicle-card__badge--green]="id.startsWith('car-')">
+            {{ users[id].speed > 0 ? (users[id].speed | number:'1.0-1') + ' km/h' : 'Dừng' }}
+          </span>
+        </div>
+
+        <div>
+          <span class="vehicle-card__speed">
+            {{ users[id].speed > 0 ? (users[id].speed | number:'1.0-1') : '0' }}
+          </span>
+          <span class="vehicle-card__speed-unit">km/h</span>
+        </div>
+
+        <div class="speed-bar">
+          <div class="speed-bar__fill"
+               [class.speed-bar__fill--blue]="id === 'real-user'"
+               [class.speed-bar__fill--red]="id === 'fake-user'"
+               [class.speed-bar__fill--green]="id.startsWith('car-')"
+               [style.width.%]="users[id].speed > 120 ? 100 : (users[id].speed / 120 * 100)">
+          </div>
+        </div>
+
+        <div class="vehicle-card__coords">
+          {{ users[id].path.slice(-1)[0]?.[0] | number:'1.5-5' }},
+          {{ users[id].path.slice(-1)[0]?.[1] | number:'1.5-5' }}
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend__item">
+      <span class="legend__dot legend__dot--blue"></span>
+      Xe của bạn
+    </div>
+    <div class="legend__item">
+      <span class="legend__dot legend__dot--red"></span>
+      Fake User
+    </div>
+    <div class="legend__item">
+      <span class="legend__dot legend__dot--green"></span>
+      Xe mô phỏng
+    </div>
+  </div>
+
+  <!-- Map -->
+  <div id="map"></div>
+
+</div>
