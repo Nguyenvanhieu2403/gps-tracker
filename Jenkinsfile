@@ -1,30 +1,19 @@
 pipeline {
     agent any
 
-    environment {
-        APP_NAME = "ultima"
-    }
-
     stages {
 
-        stage('Checkout') {
+        stage('Build Docker') {
             steps {
-                git branch: 'main',
-                url: 'YOUR_GIT_URL'
-            }
-        }
-
-        stage('Docker Build') {
-            steps {
-                sh 'docker build -t ultima .'
+                sh 'docker build -t gps-tracker .'
             }
         }
 
         stage('Deploy') {
             steps {
                 sh '''
-                docker rm -f ultima || true
-                docker run -d -p 4200:80 --name ultima ultima
+                docker rm -f gps-tracker || true
+                docker run -d -p 4200:80 --name gps-tracker gps-tracker
                 '''
             }
         }
